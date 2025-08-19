@@ -6,7 +6,7 @@ import numpy as np
 
 import PyPDF2
 
-import fitz  # 导入pymupdf库
+import fitz  # pip install pymupdf
 
 
 def read_pdf(file_path):
@@ -56,7 +56,8 @@ if __name__ == '__main__':
     # 根据书签获取切分点
     doc = fitz.open(file_path)
     toc = doc.get_toc()
-    section_info = np.empty((64 + 2, 2), dtype=int)
+    # 增加的3个位置：封面、目录的书签、控制结束
+    section_info = np.empty((64 + 3, 2), dtype=int)
     section_info[0, 0] = 1
     split_num = 1
     is_first = False
@@ -74,7 +75,7 @@ if __name__ == '__main__':
                 else:
                     section_info[split_num, 0] = redirect_page
                     split_num = split_num + 1
-    section_info[65, 0] = doc.page_count + 1  # 用于控制结束
+    section_info[66, 0] = doc.page_count + 1  # 用于控制结束
 
     # 切分PDF
     # 一旦离开with块，该文件句柄就会关闭，所以不能用read_file()函数
@@ -84,7 +85,9 @@ if __name__ == '__main__':
             pdf_writer = split_pdf(pdf_reader, section_info[chap_i, 0], section_info[chap_i+1, 0]-1)  # 55
             if not os.path.exists(output_dir):
                 os.mkdir(output_dir)
-            save_pdf(pdf_writer, "%s/%02d.pdf" % (output_dir, chap_i))
+            # 封面（-1.pdf）、目录（00.pdf）、第一章（01.pdf）...
+            print("Output %02d.pdf" % chap_i)
+            save_pdf(pdf_writer, "%s/%02d.pdf" % (output_dir, chap_i -1 ))
             pass
     print('Split PDF success!')
 

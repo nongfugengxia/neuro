@@ -163,9 +163,28 @@
 
 
 ## 贡献指南
-在进行更改之前，请阅读 [贡献指南](https://github.com/OpenHUTB/.github/blob/master/CONTRIBUTING.md) 文档，翻译方法请参考[链接](https://github.com/OpenHUTB/bazaar/blob/master/translation.md) 。参考电子版 [链接](https://pan.baidu.com/s/1c0haMl287vFUA51rRusHaA?pwd=dong) 。
+在进行更改之前，请阅读 [贡献指南](https://github.com/OpenHUTB/.github/blob/master/CONTRIBUTING.md) 文档，翻译方法请参考[链接](https://github.com/OpenHUTB/PFC/blob/main/translation.md) 。参考电子版 [链接](https://pan.baidu.com/s/1c0haMl287vFUA51rRusHaA?pwd=dong) 。
 
-### 部署
+### 环境搭建
+
+使用 xelatex 编译（使用之前安装 [latex](https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/Images/) ）：
+```shell
+xelatex.exe -synctex=1 -interaction=nonstopmode neuro.tex
+```
+
+创建虚拟环境
+```shell
+conda create -n neuro python=3.10 --yes
+conda activate neuro
+pip install -r requirements.txt
+cd src
+python split_pdf_with_index.py
+# conda deactivate neuro
+# 删除虚拟环境（慎重）
+# conda remove -n neuro --all
+```
+
+### 页面部署
 
 如果仓库历史记录过大，则可以删除 `gh-deploy` 分支（后面会重新生成），并且克隆时添加`-b main --single-branch`参数。
 注意：删除部署分支后需要在项目的设置中再次从`gh-deploy`分支部署。
